@@ -5,7 +5,7 @@
 (defn generate-template
   "This function generates the HTML output mixing a predefined
   template and the args it receive"
-  [{votes :votes ideas :ideas comments :comments}]
+  [{:keys [votes ideas comments]}]
   (html5 [:head
           [:title "Hola mundo"]
           [:meta {:charset "utf8"}]]

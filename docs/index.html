@@ -2900,7 +2900,7 @@ net.brehaut.ClojureTools = (function (SH) {
             [viewer.db :as db]))</pre></td></tr><tr><td class="docs"><p>This function generates the HTML output mixing a predefined
   template and the args it receive</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-template
-  [{votes :votes ideas :ideas comments :comments}]
+  [{:keys [votes ideas comments]}]
   (html5 [:head
           [:title &quot;Hola mundo&quot;]
           [:meta {:charset &quot;utf8&quot;}]]
