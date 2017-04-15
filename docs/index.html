@@ -2930,8 +2930,13 @@ net.brehaut.ClojureTools = (function (SH) {
   (System/exit 1))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.generator" name="viewer.generator"><h1 class="project-name">viewer.generator</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns viewer.generator
   (:require [hiccup.page :refer [html5]]
-            [viewer.db :as db]))</pre></td></tr><tr><td class="docs"><p>This function generates the HTML output mixing a predefined
-  template and the args it receive</p>
+            [viewer.db :as db]))</pre></td></tr><tr><td class="docs"><p>With this function we get all the needed data from the database and
+  we return it in a map for the generator to use.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-data-map
+  [path]
+  {:votes (db/get-all-votes path)
+   :ideas (db/get-all-ideas path)
+   :comments (db/get-all-comments path)})</pre></td></tr><tr><td class="docs"><p>We then provide a template to hold the extracted data.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-template
   [{:keys [votes ideas comments]}]
   (html5 [:head
@@ -2947,13 +2952,10 @@ net.brehaut.ClojureTools = (function (SH) {
            [:h1 &quot;Comments&quot;]
            [:ul
             (for [{:keys [id user body date circle]} comments]
-              [:li (str &quot;[&quot; user &quot; - C&quot; circle &quot;] &quot; body)])]]]))</pre></td></tr><tr><td class="docs"><p>This function gets all the needed data from the database and
-  returns it in a map</p>
-</td><td class="codes"><pre class="brush: clojure">(defn get-data-map
-  [path]
-  {:votes (db/get-all-votes path)
-   :ideas (db/get-all-ideas path)
-   :comments (db/get-all-comments path)})</pre></td></tr><tr><td class="docs">
+              [:li (str &quot;[&quot; user &quot; - C&quot; circle &quot;] &quot; body)])]]]))</pre></td></tr><tr><td class="docs"><p>And using those two pieces, we create and run a pipeline to get the
+  data, build the final output with the structure from the template
+  and finally write that HTML code to the output file provided by the
+  user.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-log
   [input output]
   (-&gt;&gt; input
