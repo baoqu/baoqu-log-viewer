@@ -1,4 +1,7 @@
 (ns viewer.generator
+  "This namespace will hold the functions needed to extract the
+  required information from the database and use it to generate the
+  HTML output with the help of a hiccup template."
   (:require [hiccup.page :refer [html5]]
             [viewer.db :as db]))
 
