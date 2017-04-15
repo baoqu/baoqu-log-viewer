@@ -2935,16 +2935,16 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn generate-template
   [{:keys [votes ideas comments]}]
   (html5 [:head
-          [:title &quot;Hola mundo&quot;]
+          [:title &quot;Baoqu log&quot;]
           [:meta {:charset &quot;utf8&quot;}]]
          [:body
           [:div#ideas
-           [:h1 &quot;IDEAS&quot;]
+           [:h1 &quot;Ideas&quot;]
            [:ul
             (for [{:keys [id name users votes]} ideas]
               [:li (str &quot;[&quot; votes &quot;] &quot; users &quot; :: &quot; name)])]]
           [:div#comments
-           [:h1 &quot;COMMENTS&quot;]
+           [:h1 &quot;Comments&quot;]
            [:ul
             (for [{:keys [id user body date circle]} comments]
               [:li (str &quot;[&quot; user &quot; - C&quot; circle &quot;] &quot; body)])]]]))</pre></td></tr><tr><td class="docs"><p>This function gets all the needed data from the database and

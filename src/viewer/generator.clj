@@ -7,16 +7,16 @@
   template and the args it receive"
   [{:keys [votes ideas comments]}]
   (html5 [:head
-          [:title "Hola mundo"]
+          [:title "Baoqu log"]
           [:meta {:charset "utf8"}]]
          [:body
           [:div#ideas
-           [:h1 "IDEAS"]
+           [:h1 "Ideas"]
            [:ul
             (for [{:keys [id name users votes]} ideas]
               [:li (str "[" votes "] " users " :: " name)])]]
           [:div#comments
-           [:h1 "COMMENTS"]
+           [:h1 "Comments"]
            [:ul
             (for [{:keys [id user body date circle]} comments]
               [:li (str "[" user " - C" circle "] " body)])]]]))
