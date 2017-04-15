@@ -7,8 +7,7 @@
                  [org.clojure/clojurescript "1.9.495"]
                  [hiccup "1.0.5"]
                  [com.layerware/hugsql "0.4.7"]
-                 [org.xerial/sqlite-jdbc "3.16.1"]
-                 [org.clojure/tools.cli "0.3.5"]]  ;; https://github.com/clojure/tools.cli
+                 [org.xerial/sqlite-jdbc "3.16.1"]]
   :aot [viewer.core]
   :main viewer.core
   :plugins [[lein-cljsbuild "1.1.5"]

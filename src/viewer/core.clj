@@ -5,8 +5,6 @@
   (:require [viewer.utils :as utils]
             [viewer.generator :as generator]))
 
-
-
 (defn -main
   "The program's flow starts when the main function is run, receiving
   the `.sqlite` path as the main argument. The program checks that the
