@@ -30,8 +30,8 @@
    :comments (db/get-all-comments path)})
 
 (defn generate-log
-  [path]
-  (->> path
+  [input output]
+  (->> input
        (get-data-map)
        (generate-template)
-       (spit "/tmp/output.html")))
+       (spit output)))
