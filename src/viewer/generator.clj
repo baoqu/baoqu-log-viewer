@@ -3,6 +3,7 @@
   required information from the database and use it to generate the
   HTML output with the help of a hiccup template."
   (:require [hiccup.page :refer [html5]]
+            [garden.core :as garden]
             [viewer.db :as db]))
 
 (defn get-data-map
@@ -13,11 +14,17 @@
    :ideas (db/get-all-ideas path)
    :comments (db/get-all-comments path)})
 
+(def template-css
+  "We use the power of [garden](https://github.com/noprompt/garden) to
+  generate the required CSS of our template."
+  (garden/css [:body {:color "darkgreen"}]))
+
 (defn generate-template
   "We then provide a template to hold the extracted data."
   [{:keys [votes ideas comments]}]
   (html5 [:head
           [:title "Baoqu log"]
+          [:style template-css]
           [:meta {:charset "utf8"}]]
          [:body
           [:div#ideas

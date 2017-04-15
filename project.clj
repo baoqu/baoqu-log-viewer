@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.9.0-alpha15"]
                  [org.clojure/clojurescript "1.9.521"]
                  [hiccup "1.0.5"]
+                 [garden "1.3.2"]
                  [com.layerware/hugsql "0.4.7"]
                  [org.xerial/sqlite-jdbc "3.16.1"]
                  [org.clojure/tools.cli "0.3.5"]]

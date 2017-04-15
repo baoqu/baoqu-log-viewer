@@ -2868,7 +2868,7 @@ net.brehaut.ClojureTools = (function (SH) {
 })(SyntaxHighlighter);
 </script><title>baoqu-log-viewer -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">baoqu-log-viewer</h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>Generate a HTML static page with the logs from a Baoqu
   event</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.9.0-alpha15</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">1.9.521</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.5</td></tr><tr><td class="dep-name">com.layerware/hugsql</td><td class="dotted"><hr /></td><td class="dep-version">0.4.7</td></tr><tr><td class="dep-name">org.xerial/sqlite-jdbc</td><td class="dotted"><hr /></td><td class="dep-version">3.16.1</td></tr><tr><td class="dep-name">org.clojure/tools.cli</td><td class="dotted"><hr /></td><td class="dep-version">0.3.5</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#viewer.core">viewer.core</a></li><li><a href="#viewer.utils">viewer.utils</a></li><li><a href="#viewer.generator">viewer.generator</a></li><li><a href="#viewer.db">viewer.db</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.core" name="viewer.core"><h1 class="project-name">viewer.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>This program generates a HTML static page with the logs from a
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.9.0-alpha15</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">1.9.521</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.5</td></tr><tr><td class="dep-name">garden</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2</td></tr><tr><td class="dep-name">com.layerware/hugsql</td><td class="dotted"><hr /></td><td class="dep-version">0.4.7</td></tr><tr><td class="dep-name">org.xerial/sqlite-jdbc</td><td class="dotted"><hr /></td><td class="dep-version">3.16.1</td></tr><tr><td class="dep-name">org.clojure/tools.cli</td><td class="dotted"><hr /></td><td class="dep-version">0.3.5</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#viewer.core">viewer.core</a></li><li><a href="#viewer.utils">viewer.utils</a></li><li><a href="#viewer.generator">viewer.generator</a></li><li><a href="#viewer.db">viewer.db</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.core" name="viewer.core"><h1 class="project-name">viewer.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>This program generates a HTML static page with the logs from a
   Baoqu event.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns viewer.core
   (:gen-class)
@@ -2932,17 +2932,22 @@ net.brehaut.ClojureTools = (function (SH) {
   HTML output with the help of a hiccup template.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns viewer.generator
   (:require [hiccup.page :refer [html5]]
+            [garden.core :as garden]
             [viewer.db :as db]))</pre></td></tr><tr><td class="docs"><p>With this function we get all the needed data from the database and
   we return it in a map for the generator to use.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-data-map
   [path]
   {:votes (db/get-all-votes path)
    :ideas (db/get-all-ideas path)
-   :comments (db/get-all-comments path)})</pre></td></tr><tr><td class="docs"><p>We then provide a template to hold the extracted data.</p>
+   :comments (db/get-all-comments path)})</pre></td></tr><tr><td class="docs"><p>We use the power of <a href="https://github.com/noprompt/garden">garden</a> to
+  generate the required CSS of our template.</p>
+</td><td class="codes"><pre class="brush: clojure">(def template-css
+  (garden/css [:body {:color &quot;darkgreen&quot;}]))</pre></td></tr><tr><td class="docs"><p>We then provide a template to hold the extracted data.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-template
   [{:keys [votes ideas comments]}]
   (html5 [:head
           [:title &quot;Baoqu log&quot;]
+          [:style template-css]
           [:meta {:charset &quot;utf8&quot;}]]
          [:body
           [:div#ideas
