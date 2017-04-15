@@ -11,14 +11,16 @@
    :subprotocol "sqlite"
    :subname path})
 
-(defn get-all-comments
-  [path]
+(defn run-query
+  "We define a general function to run any query and then we define
+  partial applications of this function for any given case"
+  [query path]
   (-> path
       (get-config)
-      (q-get-all-comments)))
+      (query)))
 
-(defn get-all-ideas
-  [path]
-  (-> path
-      (get-config)
-      (q-get-all-ideas)))
+(def get-all-comments (partial run-query q-get-all-comments))
+
+(def get-all-ideas (partial run-query q-get-all-ideas))
+
+(def get-all-votes (partial run-query q-get-all-votes))
