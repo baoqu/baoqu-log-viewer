@@ -2896,10 +2896,33 @@ net.brehaut.ClojureTools = (function (SH) {
   (apply println message-parts)
   (System/exit 1))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.generator" name="viewer.generator"><h1 class="project-name">viewer.generator</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns viewer.generator
-  (:require [viewer.db :as db]))</pre></td></tr><tr><td class="docs">
+  (:require [hiccup.page :refer [html5]]
+            [viewer.db :as db]))</pre></td></tr><tr><td class="docs"><p>This function generates the HTML output mixing a predefined
+  template and the args it receive</p>
+</td><td class="codes"><pre class="brush: clojure">(defn generate-template
+  [{votes :votes ideas :ideas comments :comments}]
+  (html5 [:head
+          [:title &quot;Hola mundo&quot;]
+          [:meta {:charset &quot;utf8&quot;}]]
+         [:body
+          [:div [:h1 &quot;IDEAS&quot;]
+           [:ul
+            (for [{id :idea-id
+                   name :idea-name
+                   user :user} votes]
+              [:li name])]]]))</pre></td></tr><tr><td class="docs"><p>This function gets all the needed data from the database and
+  returns it in a map</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-data-map
+  [path]
+  {:votes (db/get-all-votes path)
+   :ideas (db/get-all-ideas path)
+   :comments (db/get-all-comments path)})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn generate-log
   [path]
-  (println (map :body (db/get-all-comments path))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.db" name="viewer.db"><h1 class="project-name">viewer.db</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  (-&gt;&gt; path
+       (get-data-map)
+       (generate-template)
+       (spit &quot;/tmp/output.html&quot;)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.db" name="viewer.db"><h1 class="project-name">viewer.db</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns viewer.db
   (:require [hugsql.core :as hugsql]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(hugsql/def-db-fns &quot;sql/queries.sql&quot;)</pre></td></tr><tr><td class="docs"><p>This method receives the path of the database file and returns a
