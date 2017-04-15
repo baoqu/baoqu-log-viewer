@@ -10,12 +10,16 @@
           [:title "Hola mundo"]
           [:meta {:charset "utf8"}]]
          [:body
-          [:div [:h1 "IDEAS"]
+          [:div#ideas
+           [:h1 "IDEAS"]
            [:ul
-            (for [{id :idea-id
-                   name :idea-name
-                   user :user} votes]
-              [:li name])]]]))
+            (for [{:keys [id name users votes]} ideas]
+              [:li (str "[" votes "] " users " :: " name)])]]
+          [:div#comments
+           [:h1 "COMMENTS"]
+           [:ul
+            (for [{:keys [id user body date circle]} comments]
+              [:li (str "[" user " - C" circle "] " body)])]]]))
 
 (defn get-data-map
   "This function gets all the needed data from the database and

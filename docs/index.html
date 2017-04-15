@@ -2905,12 +2905,16 @@ net.brehaut.ClojureTools = (function (SH) {
           [:title &quot;Hola mundo&quot;]
           [:meta {:charset &quot;utf8&quot;}]]
          [:body
-          [:div [:h1 &quot;IDEAS&quot;]
+          [:div#ideas
+           [:h1 &quot;IDEAS&quot;]
            [:ul
-            (for [{id :idea-id
-                   name :idea-name
-                   user :user} votes]
-              [:li name])]]]))</pre></td></tr><tr><td class="docs"><p>This function gets all the needed data from the database and
+            (for [{:keys [id name users votes]} ideas]
+              [:li (str &quot;[&quot; votes &quot;] &quot; users &quot; :: &quot; name)])]]
+          [:div#comments
+           [:h1 &quot;COMMENTS&quot;]
+           [:ul
+            (for [{:keys [id user body date circle]} comments]
+              [:li (str &quot;[&quot; user &quot; - C&quot; circle &quot;] &quot; body)])]]]))</pre></td></tr><tr><td class="docs"><p>This function gets all the needed data from the database and
   returns it in a map</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-data-map
   [path]
