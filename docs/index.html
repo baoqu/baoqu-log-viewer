@@ -2968,17 +2968,21 @@ net.brehaut.ClojureTools = (function (SH) {
   (-&gt;&gt; input
        (get-data-map)
        (generate-template)
-       (spit output)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.db" name="viewer.db"><h1 class="project-name">viewer.db</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+       (spit output)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.db" name="viewer.db"><h1 class="project-name">viewer.db</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>This namespace contains all the functions used to extract data from
+  the <code>sqlite</code> database. The queries are read from the <code>queries.sql</code>
+  file in the <code>resources</code> folder, so they are isolated and easy to
+  modify directly in <code>SQL</code> without any other layer in between our
+  clojure code and it.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns viewer.db
   (:require [hugsql.core :as hugsql]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(hugsql/def-db-fns &quot;sql/queries.sql&quot;)</pre></td></tr><tr><td class="docs"><p>This method receives the path of the database file and returns a
-  map with its configuration ready to be used with <code>hugsql</code></p>
+  map with its configuration ready to be used with <code>hugsql</code>.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-config
   [path]
   {:classname &quot;org.sqlite.JDBC&quot;
    :subprotocol &quot;sqlite&quot;
    :subname path})</pre></td></tr><tr><td class="docs"><p>We define a general function to run any query and then we define
-  partial applications of this function for any given case</p>
+  partial applications of this function for any given case.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn run-query
   [query path]
   (-&gt; path
