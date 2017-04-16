@@ -2868,7 +2868,7 @@ net.brehaut.ClojureTools = (function (SH) {
 })(SyntaxHighlighter);
 </script><title>baoqu-log-viewer -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">baoqu-log-viewer</h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>Generate a HTML static page with the logs from a Baoqu
   event</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.9.0-alpha15</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">1.9.521</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.5</td></tr><tr><td class="dep-name">garden</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2</td></tr><tr><td class="dep-name">com.layerware/hugsql</td><td class="dotted"><hr /></td><td class="dep-version">0.4.7</td></tr><tr><td class="dep-name">org.xerial/sqlite-jdbc</td><td class="dotted"><hr /></td><td class="dep-version">3.16.1</td></tr><tr><td class="dep-name">org.clojure/tools.cli</td><td class="dotted"><hr /></td><td class="dep-version">0.3.5</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#viewer.core">viewer.core</a></li><li><a href="#viewer.utils">viewer.utils</a></li><li><a href="#viewer.generator">viewer.generator</a></li><li><a href="#viewer.db">viewer.db</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.core" name="viewer.core"><h1 class="project-name">viewer.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>This program generates a HTML static page with the logs from a
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.9.0-alpha15</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">1.9.521</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.5</td></tr><tr><td class="dep-name">garden</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2</td></tr><tr><td class="dep-name">com.layerware/hugsql</td><td class="dotted"><hr /></td><td class="dep-version">0.4.7</td></tr><tr><td class="dep-name">org.xerial/sqlite-jdbc</td><td class="dotted"><hr /></td><td class="dep-version">3.16.1</td></tr><tr><td class="dep-name">org.clojure/tools.cli</td><td class="dotted"><hr /></td><td class="dep-version">0.3.5</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#viewer.core">viewer.core</a></li><li><a href="#viewer.utils">viewer.utils</a></li><li><a href="#viewer.generator">viewer.generator</a></li><li><a href="#viewer.db">viewer.db</a></li><li><a href="#viewer.cljs-compiler">viewer.cljs-compiler</a></li><li><a href="#viewer-ui.core">viewer-ui.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.core" name="viewer.core"><h1 class="project-name">viewer.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>This program generates a HTML static page with the logs from a
   Baoqu event.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns viewer.core
   (:gen-class)
@@ -2931,9 +2931,10 @@ net.brehaut.ClojureTools = (function (SH) {
   required information from the database and use it to generate the
   HTML output with the help of a hiccup template.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns viewer.generator
-  (:require [hiccup.page :refer [html5]]
+  (:require [hiccup.page :refer [html5 include-js]]
             [garden.core :as garden]
-            [viewer.db :as db]))</pre></td></tr><tr><td class="docs"><p>With this function we get all the needed data from the database and
+            [viewer.db :as db]
+            [viewer.cljs-compiler :as cljsc]))</pre></td></tr><tr><td class="docs"><p>With this function we get all the needed data from the database and
   we return it in a map for the generator to use.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-data-map
   [path]
@@ -2942,7 +2943,10 @@ net.brehaut.ClojureTools = (function (SH) {
    :comments (db/get-all-comments path)})</pre></td></tr><tr><td class="docs"><p>We use the power of <a href="https://github.com/noprompt/garden">garden</a> to
   generate the required CSS of our template.</p>
 </td><td class="codes"><pre class="brush: clojure">(def template-css
-  (garden/css [:body {:color &quot;darkgreen&quot;}]))</pre></td></tr><tr><td class="docs"><p>We then provide a template to hold the extracted data.</p>
+  (garden/css [:body {:color &quot;darkgreen&quot;}]))</pre></td></tr><tr><td class="docs"><p>This is a list of the JS files that will be included in the
+  template.</p>
+</td><td class="codes"><pre class="brush: clojure">(def ^:const js-includes
+  [&quot;out/goog/base.js&quot; &quot;out/main.js&quot;])</pre></td></tr><tr><td class="docs"><p>We then provide a template to hold the extracted data.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-template
   [{:keys [votes ideas comments]}]
   (html5 [:head
@@ -2959,12 +2963,14 @@ net.brehaut.ClojureTools = (function (SH) {
            [:h1 &quot;Comments&quot;]
            [:ul
             (for [{:keys [id user body date circle]} comments]
-              [:li (str &quot;[&quot; user &quot; - C&quot; circle &quot;] &quot; body)])]]]))</pre></td></tr><tr><td class="docs"><p>And using those two pieces, we create and run a pipeline to get the
-  data, build the final output with the structure from the template
-  and finally write that HTML code to the output file provided by the
-  user.</p>
+              [:li (str &quot;[&quot; user &quot; - C&quot; circle &quot;] &quot; body)])]]
+          (apply include-js js-includes)]))</pre></td></tr><tr><td class="docs"><p>And using those two pieces, we create and run a pipeline to compile
+  the CLJS code, get the data, build the final output with the
+  structure from the template and finally write that HTML code to the
+  output file provided by the user.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-log
   [input output]
+  (cljsc/cljs-compile)
   (-&gt;&gt; input
        (get-data-map)
        (generate-template)
@@ -2990,7 +2996,18 @@ net.brehaut.ClojureTools = (function (SH) {
       (query)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def get-all-comments (partial run-query q-get-all-comments))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def get-all-ideas (partial run-query q-get-all-ideas))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def get-all-votes (partial run-query q-get-all-votes))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_viewer.core">viewer.core</li><li class="floating-toc-li" id="floating-toc_viewer.utils">viewer.utils</li><li class="floating-toc-li" id="floating-toc_viewer.generator">viewer.generator</li><li class="floating-toc-li" id="floating-toc_viewer.db">viewer.db</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+</td><td class="codes"><pre class="brush: clojure">(def get-all-votes (partial run-query q-get-all-votes))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer.cljs-compiler" name="viewer.cljs-compiler"><h1 class="project-name">viewer.cljs-compiler</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>This namespace contains the functions related to the compilation
+  process of the CLJS code.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns viewer.cljs-compiler
+  (:require [cljs.build.api :as cljs]))</pre></td></tr><tr><td class="docs"><p>Here we use the CLJS compile API to compile run the compilation
+  process.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn cljs-compile
+  []
+  (cljs/build &quot;src-cljs&quot; {:main 'viewer-ui.core
+                          :output-to &quot;out/main.js&quot;}))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#viewer-ui.core" name="viewer-ui.core"><h1 class="project-name">viewer-ui.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns viewer-ui.core)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(enable-console-print!)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(println &quot;Hello world!&quot;)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_viewer.core">viewer.core</li><li class="floating-toc-li" id="floating-toc_viewer.utils">viewer.utils</li><li class="floating-toc-li" id="floating-toc_viewer.generator">viewer.generator</li><li class="floating-toc-li" id="floating-toc_viewer.db">viewer.db</li><li class="floating-toc-li" id="floating-toc_viewer.cljs-compiler">viewer.cljs-compiler</li><li class="floating-toc-li" id="floating-toc_viewer-ui.core">viewer-ui.core</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 
 // hackity hack

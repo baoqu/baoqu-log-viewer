@@ -15,4 +15,4 @@
   :plugins [[lein-cljsbuild "1.1.5"]
             [lein-ancient "0.6.10"]
             [lein-marginalia "0.9.0"]]
-  :aliases {"doc" ["marg" "-f" "index.html"]})
+  :aliases {"doc" ["marg" "-f" "index.html" "src" "src-cljs"]})
