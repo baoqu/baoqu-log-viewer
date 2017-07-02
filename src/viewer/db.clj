@@ -29,3 +29,5 @@
 (def get-all-ideas (partial run-query q-get-all-ideas))
 
 (def get-all-votes (partial run-query q-get-all-votes))
+
+(def get-all-circles (partial run-query q-get-all-circles))

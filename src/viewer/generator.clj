@@ -14,7 +14,8 @@
   [path]
   {:votes (db/get-all-votes path)
    :ideas (db/get-all-ideas path)
-   :comments (db/get-all-comments path)})
+   :comments (db/get-all-comments path)
+   :circles (db/get-all-circles path)})
 
 (def template-css
   "We use the power of [garden](https://github.com/noprompt/garden) to
@@ -28,7 +29,7 @@
 
 (defn generate-template
   "We then provide a template to hold the extracted data."
-  [{:keys [votes ideas comments]}]
+  [{:keys [votes ideas comments circles]}]
   (html5 [:head
           [:title "Baoqu log"]
           [:meta {:http-equiv "Content-Type" :content "text/html; charset=UTF-8"}]
@@ -42,11 +43,9 @@
             [:li [:a {:href "#ideas"} "Ideas"]]
             [:li [:a {:href "#comments"} "Comments"]]]
            [:select.circles {:name ""}
-            [:option {:value ""} "All da shírculos"]
-            [:option {:value ""} "Shírculo 1"]
-            [:option {:value ""} "Shírculo 2"]
-            [:option {:value ""} "Shírculo 3"]
-            [:option {:value ""} "Shírculo 4"]]]
+            [:option {:value ""} "All Circles"]
+            (for [{:keys [id]} circles]
+              [:option {:value id} (str "Circle " id)])]]
           [:div.content
            [:section#ideas
             [:h2 "IDEAS"]

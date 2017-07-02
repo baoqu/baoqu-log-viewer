@@ -31,3 +31,6 @@ select i.id as "idea-id",
          on ui."idea-id" = i.id
  inner join users as u
          on ui."user-id" = u.id;
+
+-- :name q-get-all-circles
+select id from circles;
