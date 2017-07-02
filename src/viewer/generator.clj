@@ -31,19 +31,37 @@
   [{:keys [votes ideas comments]}]
   (html5 [:head
           [:title "Baoqu log"]
-          [:style template-css]
-          [:meta {:charset "utf8"}]]
+          [:meta {:http-equiv "Content-Type" :content "text/html; charset=UTF-8"}]
+          [:style template-css]]
          [:body
-          [:div#ideas
-           [:h1 "Ideas"]
-           [:ul
-            (for [{:keys [id name users votes]} ideas]
-              [:li (str "[" votes "] " users " :: " name)])]]
-          [:div#comments
-           [:h1 "Comments"]
-           [:ul
-            (for [{:keys [id user body date circle]} comments]
-              [:li (str "[" user " - C" circle "] " body)])]]
+          [:header
+           [:span.logo]
+           [:div.logo-name "Baoqu"]
+           [:h1 "EVENT NAME"]
+           [:ul.nav
+            [:li [:a {:href "#ideas"} "Ideas"]]
+            [:li [:a {:href "#comments"} "Comments"]]]
+           [:select.circles {:name ""}
+            [:option {:value ""} "All da shírculos"]
+            [:option {:value ""} "Shírculo 1"]
+            [:option {:value ""} "Shírculo 2"]
+            [:option {:value ""} "Shírculo 3"]
+            [:option {:value ""} "Shírculo 4"]]]
+          [:div.content
+           [:section#ideas
+            [:h2 "IDEAS"]
+            [:ul {:class "list ideas"}
+             (for [{:keys [name users votes]} ideas]
+               [:li
+                [:div.idea name]
+                [:div.meta [:strong (str votes "votes")] (str "|" users)]])]]]
+          [:section#comments
+           [:h2 "COMMENTS"]
+           [:ul {:class "list comments"}
+            (for [{:keys [user body circle]} comments]
+              [:li
+               [:div.comment body]
+               [:div.meta [:span.tag (str "C" circle)] (str " " user)]])]]
           (apply include-js js-includes)]))
 
 (defn generate-log

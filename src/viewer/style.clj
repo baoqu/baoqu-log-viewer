@@ -1,5 +1,5 @@
 (ns viewer.style
-  "This namespace will hold the styles for the output HTML")
+  "This namespace will hold the styles for the output HTML.")
 
 (def style [[:* {:box-sizing "border-box"}]
             [:html {:font-family "\"Open Sans\", Arial, sans-serif"
