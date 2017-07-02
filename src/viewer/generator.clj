@@ -5,7 +5,8 @@
   (:require [hiccup.page :refer [html5 include-js]]
             [garden.core :as garden]
             [viewer.db :as db]
-            [viewer.cljs-compiler :as cljsc]))
+            [viewer.cljs-compiler :as cljsc]
+            [viewer.style :refer [style]]))
 
 (defn get-data-map
   "With this function we get all the needed data from the database and
@@ -18,7 +19,7 @@
 (def template-css
   "We use the power of [garden](https://github.com/noprompt/garden) to
   generate the required CSS of our template."
-  (garden/css [:body {:color "darkgreen"}]))
+  (garden/css style))
 
 (def ^:const js-includes
   "This is a list of the JS files that will be included in the
